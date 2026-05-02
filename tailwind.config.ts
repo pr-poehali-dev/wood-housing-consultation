@@ -7,6 +7,7 @@ export default {
 		"./components/**/*.{ts,tsx}",
 		"./app/**/*.{ts,tsx}",
 		"./src/**/*.{ts,tsx}",
+			"./1777706034120544351.html"
 	],
 	prefix: "",
 	theme: {
@@ -89,7 +90,11 @@ export default {
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out'
-			}
+			},
+			fontFamily: {
+				display: ['Cormorant', 'serif'],
+				body: ['Golos Text', 'sans-serif'],
+			},
 		}
 	},
 	plugins: [require("tailwindcss-animate")],
