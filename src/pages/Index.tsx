@@ -3,6 +3,76 @@ import Icon from "@/components/ui/icon";
 
 const HERO_IMAGE = "https://cdn.poehali.dev/projects/0680fd2c-85ca-4427-9341-47b9350f9bfd/files/c01b8f23-346b-49ef-8e46-648d4fd4a409.jpg";
 
+const GALLERY_ITEMS = [
+  {
+    img: "https://cdn.poehali.dev/projects/0680fd2c-85ca-4427-9341-47b9350f9bfd/files/600557bd-c71f-4b54-a9bc-a852d4dcd19b.jpg",
+    title: "Производство и деревообработка",
+    desc: "Промышленные станки, сушильные камеры, контроль качества",
+    span: "col-span-2",
+  },
+  {
+    img: "https://cdn.poehali.dev/projects/0680fd2c-85ca-4427-9341-47b9350f9bfd/files/50c8fe01-69d7-4b9b-bfb1-1cdfd26b43ea.jpg",
+    title: "Современный клееный брус",
+    desc: "Минимальная усадка, большие окна, скандинавская архитектура",
+    span: "col-span-1",
+  },
+  {
+    img: "https://cdn.poehali.dev/projects/0680fd2c-85ca-4427-9341-47b9350f9bfd/files/2dd3370f-500b-46d4-94f9-516b69c9c655.jpg",
+    title: "Рубленый сруб",
+    desc: "Ручная работа, природная структура дерева, настоящее мастерство",
+    span: "col-span-1",
+  },
+  {
+    img: "https://cdn.poehali.dev/projects/0680fd2c-85ca-4427-9341-47b9350f9bfd/files/9a9a9e4c-8712-4eac-8be9-7a72e33d80c7.jpg",
+    title: "Интерьер деревянного дома",
+    desc: "Тепло, уют и натуральные материалы в каждой детали",
+    span: "col-span-2",
+  },
+];
+
+const MATERIALS_CATEGORIES = [
+  {
+    cat: "Конструктив",
+    icon: "Building2",
+    items: [
+      { name: "Бревно оцилиндрованное", spec: "Ø160–280 мм, хвоя, 1–2 сорт", use: "Стены сруба" },
+      { name: "Бревно рубленое (дикий сруб)", spec: "Ø200–400 мм, ручная рубка", use: "Стены сруба" },
+      { name: "Брус профилированный Е/В", spec: "145×145, 195×145 мм, хвоя", use: "Стены, перегородки" },
+      { name: "Клееный брус", spec: "100–300 мм, сосна/ель/лиственница", use: "Стены, балки, колонны" },
+    ],
+  },
+  {
+    cat: "Половые покрытия",
+    icon: "LayoutGrid",
+    items: [
+      { name: "Доска половая строганая", spec: "28×140, 36×140 мм, сосна/лиственница", use: "Черновой и чистовой пол" },
+      { name: "Доска террасная (декинг)", spec: "28×140 мм, лиственница/термодерево", use: "Терраса, крыльцо" },
+      { name: "Паркетная доска", spec: "3-слойная, 14–20 мм, дуб/ясень", use: "Жилые помещения" },
+      { name: "Инженерная доска дуба", spec: "3–4 мм шпон дуба, 14–21 мм общ.", use: "Гостиная, спальня, кабинет" },
+    ],
+  },
+  {
+    cat: "Стеновая отделка",
+    icon: "Layers",
+    items: [
+      { name: "Вагонка хвойная", spec: "96×12 мм, профиль штиль/классика", use: "Внутренняя отделка стен" },
+      { name: "Имитация бруса", spec: "135×20, 190×20 мм, сосна/ель", use: "Фасад, интерьер" },
+      { name: "Блок-хаус", spec: "Ø100–140 мм, хвоя, камерная сушка", use: "Фасад, интерьер" },
+      { name: "Планкен прямой/скошенный", spec: "90×20, 120×20 мм, лиственница", use: "Фасад" },
+    ],
+  },
+  {
+    cat: "Потолок и декор",
+    icon: "Home",
+    items: [
+      { name: "Вагонка для потолка", spec: "68×12 мм, сосна, сорт Экстра/А", use: "Потолки, бани" },
+      { name: "Балки декоративные", spec: "80–200 мм, массив дуба/сосны", use: "Потолочные балки" },
+      { name: "Наличники и плинтусы", spec: "Дуб, сосна, МДФ шпон", use: "Обрамление проёмов" },
+      { name: "Евровагонка (липа/осина)", spec: "88×12 мм, профиль евро", use: "Баня, сауна, хаммам" },
+    ],
+  },
+];
+
 const defaultContent = {
   hero: {
     tag: "Независимый эксперт по деревянному домостроению",
@@ -101,6 +171,7 @@ export default function Index() {
   const [techs, setTechs] = useState(defaultTechs);
   const [faq, setFaq] = useState(defaultFaq);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [activeMatCat, setActiveMatCat] = useState(0);
   const [saved, setSaved] = useState(false);
 
   const update = (section: keyof MainContent, key: string, value: string) => {
@@ -156,7 +227,7 @@ export default function Index() {
             Деревяшкин
           </span>
           <div className="hidden md:flex items-center gap-6" style={{ fontSize: 14, color: "var(--wood-dark)" }}>
-            {[["hero", "Главная"], ["services", "Услуги"], ["technologies", "Технологии"], ["faq", "FAQ"], ["about", "О Максе"], ["contacts", "Контакты"]].map(([id, label]) => (
+            {[["hero", "Главная"], ["services", "Услуги"], ["technologies", "Технологии"], ["materials", "Материалы"], ["faq", "FAQ"], ["about", "О Максе"], ["contacts", "Контакты"]].map(([id, label]) => (
               <button key={id} onClick={() => scrollTo(id)} className="hover:opacity-60 transition-opacity">{label}</button>
             ))}
           </div>
@@ -379,6 +450,107 @@ export default function Index() {
               className="px-8 py-3 rounded-md font-medium transition-all hover:opacity-90 hover:scale-105"
               style={{ background: "var(--wood-dark)", color: "var(--cream)", fontSize: 14 }}>
               Получить рекомендацию
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* GALLERY */}
+      <section className="py-24" style={{ background: "var(--wood-deep)" }}>
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="text-center mb-14">
+            <span style={{ fontSize: 11, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--wood-mid)", display: "block", marginBottom: 12, fontWeight: 500 }}>Галерея</span>
+            <h2 style={{ fontFamily: "'Cormorant', serif", fontSize: "clamp(30px,4vw,48px)", fontWeight: 700, color: "var(--wood-light)", lineHeight: 1.2 }}>
+              Производство, технологии,<br/>готовые дома
+            </h2>
+          </div>
+          <div className="grid grid-cols-3 gap-4 auto-rows-[220px]">
+            {GALLERY_ITEMS.map((item, idx) => (
+              <div key={idx} className={`group relative rounded-2xl overflow-hidden cursor-pointer ${item.span}`} style={{ gridRow: idx === 0 || idx === 3 ? "span 1" : "span 1" }}>
+                <img src={item.img} alt={item.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                <div className="absolute inset-0 flex flex-col justify-end p-5 transition-opacity duration-300"
+                  style={{ background: "linear-gradient(to top, rgba(30,14,4,0.85) 0%, rgba(30,14,4,0.1) 60%, transparent 100%)" }}>
+                  <p style={{ fontFamily: "'Cormorant', serif", fontSize: 18, fontWeight: 600, color: "var(--wood-light)", marginBottom: 4 }}>{item.title}</p>
+                  <p style={{ fontSize: 12, color: "rgba(212,169,106,0.8)", lineHeight: 1.4 }}>{item.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* MATERIALS */}
+      <section id="materials" className="py-24" style={{ background: "var(--cream)" }}>
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="text-center mb-14">
+            <span style={{ fontSize: 11, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--amber)", display: "block", marginBottom: 12, fontWeight: 500 }}>Подбор материалов</span>
+            <h2 style={{ fontFamily: "'Cormorant', serif", fontSize: "clamp(30px,4vw,48px)", fontWeight: 700, color: "var(--wood-deep)", marginBottom: 14, lineHeight: 1.2 }}>
+              От строганой доски<br/>до инженерной доски дуба
+            </h2>
+            <p style={{ fontSize: 15, color: "var(--wood-dark)", opacity: 0.7, maxWidth: 500, margin: "0 auto" }}>
+              Я помогу выбрать материал под ваш бюджет и задачу — с учётом производителя, сорта и реальной цены без наценок
+            </p>
+          </div>
+
+          {/* Category tabs */}
+          <div className="flex flex-wrap gap-3 justify-center mb-10">
+            {MATERIALS_CATEGORIES.map((cat, idx) => (
+              <button
+                key={idx}
+                onClick={() => setActiveMatCat(idx)}
+                className="flex items-center gap-2 px-5 py-2.5 rounded-full border transition-all font-medium"
+                style={{
+                  fontSize: 13,
+                  background: activeMatCat === idx ? "var(--wood-dark)" : "transparent",
+                  color: activeMatCat === idx ? "var(--cream)" : "var(--wood-dark)",
+                  borderColor: activeMatCat === idx ? "var(--wood-dark)" : "rgba(139,94,60,0.25)",
+                }}
+              >
+                <Icon name={cat.icon as "Home"} size={14} />
+                {cat.cat}
+              </button>
+            ))}
+          </div>
+
+          {/* Materials table */}
+          <div className="rounded-2xl overflow-hidden border" style={{ borderColor: "rgba(212,169,106,0.2)" }}>
+            <div className="grid grid-cols-3 px-6 py-3" style={{ background: "var(--wood-dark)" }}>
+              <span style={{ fontSize: 11, fontWeight: 600, color: "rgba(245,237,224,0.6)", letterSpacing: "0.08em", textTransform: "uppercase" }}>Материал</span>
+              <span style={{ fontSize: 11, fontWeight: 600, color: "rgba(245,237,224,0.6)", letterSpacing: "0.08em", textTransform: "uppercase" }}>Характеристики</span>
+              <span style={{ fontSize: 11, fontWeight: 600, color: "rgba(245,237,224,0.6)", letterSpacing: "0.08em", textTransform: "uppercase" }}>Применение</span>
+            </div>
+            {MATERIALS_CATEGORIES[activeMatCat].items.map((item, idx) => (
+              <div key={idx} className="grid grid-cols-3 px-6 py-4 border-t transition-colors hover:bg-amber-50/40"
+                style={{ borderColor: "rgba(212,169,106,0.12)", background: idx % 2 === 0 ? "var(--wood-light)" : "white" }}>
+                <div>
+                  <p style={{ fontSize: 14, fontWeight: 600, color: "var(--wood-deep)", marginBottom: 2 }}>{item.name}</p>
+                </div>
+                <div>
+                  <p style={{ fontSize: 13, color: "var(--wood-dark)", opacity: 0.8, lineHeight: 1.5 }}>{item.spec}</p>
+                </div>
+                <div className="flex items-start">
+                  <span className="inline-block px-2 py-0.5 rounded-full" style={{ fontSize: 11, fontWeight: 500, background: "rgba(200,134,42,0.12)", color: "var(--amber)" }}>
+                    {item.use}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-8 p-6 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4"
+            style={{ background: "linear-gradient(135deg, var(--wood-dark) 0%, var(--wood-deep) 100%)" }}>
+            <div>
+              <p style={{ fontFamily: "'Cormorant', serif", fontSize: 20, fontWeight: 600, color: "var(--wood-light)", marginBottom: 4 }}>
+                Не знаете, какой материал выбрать?
+              </p>
+              <p style={{ fontSize: 13, color: "rgba(212,169,106,0.75)" }}>
+                Расскажите о проекте — подберу оптимальное решение под ваш бюджет
+              </p>
+            </div>
+            <button onClick={() => scrollTo("contacts")}
+              className="shrink-0 px-6 py-3 rounded-md font-medium transition-all hover:opacity-90"
+              style={{ background: "var(--amber)", color: "var(--wood-deep)", fontSize: 14 }}>
+              Получить подбор
             </button>
           </div>
         </div>
